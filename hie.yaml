@@ -1,6 +1,6 @@
 cradle:
   cabal:
-    - path: "./cmd/grammar-grouch"
+    - path: "./cmd"
       component: "exe:grammar-grouch"
     - path: "./src"
       component: "lib:grammar-grouch"
