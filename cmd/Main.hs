@@ -40,21 +40,16 @@ opts =
 
 main :: IO ()
 main = do
-  options <- execParser opts
+  Options {..} <- execParser opts
   let redditApp =
         RedditApp
-          { clientID = redditClientID options,
-            clientSecret = secret options,
+          { clientID = redditClientID,
+            clientSecret = secret,
             redirectURI = "http://localhost:8000",
             deviceID = "DO_NOT_TRACK_THIS_DEVICE",
             grantType = "client_credentials"
           }
-  creds <-
-    requestAccessToken
-      redditApp
-      [ "grant_type" := grantType redditApp,
-        "device_id" := deviceID redditApp
-      ]
+  creds <- requestAccessToken redditApp
   putStrLn $ show creds
 
 data RedditApp = RedditApp
@@ -81,19 +76,21 @@ data RedditTokenResponse = RedditTokenResponse
 instance FromJSON RedditTokenResponse
 
 -- | requestAccessToken makes requests for API tokens.
-requestAccessToken :: (MonadIO m) => RedditApp -> [FormParam] -> m RedditTokenResponse
-requestAccessToken app params =
+requestAccessToken :: (MonadIO m) => RedditApp -> m RedditTokenResponse
+requestAccessToken RedditApp {..} =
   requestAsJSON $
     postWith
       ( defaults
           & header "User-Agent" .~ ["script:grammar-grouch-bot:v0 (by grammar-grouch-bot)"]
           & auth
             ?~ basicAuth
-              (encodeUtf8 $ clientID app)
-              (encodeUtf8 $ clientSecret app)
+              (encodeUtf8 clientID)
+              (encodeUtf8 clientSecret)
       )
       redditTokenURL
-      params
+      [ "grant_type" := grantType,
+        "device_id" := deviceID
+      ]
 
 requestAsJSON :: (MonadIO m, FromJSON t) => IO (Response LByteString) -> m t
 requestAsJSON req = do
