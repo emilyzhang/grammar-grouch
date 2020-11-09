@@ -3,13 +3,54 @@ name:          grammar-grouch
 version:       0.1.0.0
 build-type:    Simple
 
+library
+    exposed-modules:    GrammarGrouch.Reddit.Auth
+    hs-source-dirs:     src
+    default-language:   Haskell2010
+    default-extensions:
+        NoImplicitPrelude Arrows ConstraintKinds DataKinds
+        DefaultSignatures DeriveFunctor DeriveGeneric DuplicateRecordFields
+        FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving
+        MultiParamTypeClasses NamedFieldPuns OverloadedStrings
+        RecordWildCards ScopedTypeVariables TemplateHaskell TypeOperators
+        DeriveDataTypeable
+
+    ghc-options:
+        -Wall -Wincomplete-uni-patterns -Wcompat
+        -Wincomplete-record-updates -Wmissing-home-modules
+        -Wmissing-export-lists -Wredundant-constraints
+
+    build-depends:
+        base >=4.12 && <4.14,
+        relude ==0.7.0.0,
+        aeson ==1.5.1.0,
+        containers ==0.6.2.1,
+        hashable-time ==0.2.0.2,
+        http-types ==0.12.3,
+        lens ==4.19.2,
+        monad-parallel ==0.7.2.3,
+        opaleye ==0.6.7004.2,
+        postgresql-simple ==0.6.2,
+        product-profunctors ==0.10.0.1,
+        random-strings ==0.1.1.0,
+        time ==1.9.3,
+        tracing ==0.0.5.1,
+        unix ==2.7.2.2,
+        unordered-containers ==0.2.10.0,
+        optparse-applicative ==0.15.1.0,
+        wreq ==0.5.3.2
+
 executable grammar-grouch
     main-is:            Main.hs
     hs-source-dirs:     cmd
     default-language:   Haskell2010
     default-extensions:
-        NoImplicitPrelude DuplicateRecordFields NamedFieldPuns
-        OverloadedStrings RecordWildCards DeriveGeneric DeriveDataTypeable
+        NoImplicitPrelude Arrows ConstraintKinds DataKinds
+        DefaultSignatures DeriveFunctor DeriveGeneric DuplicateRecordFields
+        FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving
+        MultiParamTypeClasses NamedFieldPuns OverloadedStrings
+        RecordWildCards ScopedTypeVariables TemplateHaskell TypeOperators
+        DeriveDataTypeable
 
     ghc-options:
         -Wall -Wincomplete-uni-patterns -Wcompat
@@ -19,8 +60,9 @@ executable grammar-grouch
 
     build-depends:
         base >=4.12 && <4.14,
-        aeson ==1.5.1.0,
         relude ==0.7.0.0,
+        aeson ==1.5.1.0,
         wreq ==0.5.3.2,
         lens ==4.19.2,
-        optparse-applicative ==0.15.1.0
+        optparse-applicative ==0.15.1.0,
+        grammar-grouch -any
