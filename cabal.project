@@ -1,8 +1,0 @@
-packages: .
-verbose: 1
-jobs: $ncpus
-with-compiler: ghc-8.8.4
-optimization: 2
-compiler: ghc
-split-sections: True
-executable-stripping: True
