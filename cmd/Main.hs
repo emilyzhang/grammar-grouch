@@ -1,5 +1,6 @@
 module Main (main) where
 
+import GrammarGrouch.Reddit.API (getNewestPosts)
 import GrammarGrouch.Reddit.Auth (RedditApp (..), requestAccessToken)
 import Options.Applicative
   ( ParserInfo,
@@ -43,3 +44,5 @@ main = do
           }
   creds <- requestAccessToken redditApp
   putStrLn $ show creds
+  newestPosts <- getNewestPosts
+  putStrLn $ show newestPosts
