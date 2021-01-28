@@ -11,12 +11,14 @@ import Options.Applicative
     long,
     progDesc,
     strOption,
+    switch,
   )
 import Relude
 
 data Options = Options
   { redditClientID :: Text,
-    secret :: Text
+    secret :: Text,
+    debugMode :: Bool
   }
   deriving (Show)
 
@@ -30,6 +32,7 @@ opts =
       Options
         <$> strOption (long "client_id")
         <*> strOption (long "client_secret")
+        <*> switch (long "debug")
 
 main :: IO ()
 main = do
@@ -40,9 +43,11 @@ main = do
             clientSecret = secret,
             redirectURI = "http://localhost:8000",
             deviceID = "DO_NOT_TRACK_THIS_DEVICE",
-            grantType = "client_credentials"
+            grantType = "client_credentials",
+            debugMode
           }
   creds <- requestAccessToken redditApp
-  putStrLn $ show creds
-  newestPosts <- getNewestPosts
+  print creds
+  print redditApp
+  newestPosts <- getNewestPosts debugMode
   putStrLn $ show newestPosts

@@ -2,6 +2,7 @@ module GrammarGrouch.Reddit.API (getNewestPosts) where
 
 import Control.Lens ((.~))
 import Data.Aeson (FromJSON (..), withObject, (.:))
+import Data.List
 import GrammarGrouch.Reddit.Auth (RedditCredentials (..))
 import GrammarGrouch.Reddit.Internal (requestAsJSON)
 import Network.Wreq (defaults, getWith, header)
@@ -13,15 +14,30 @@ redditAPIURL = "https://reddit.com/api/v1"
 newestPostsURL :: String
 newestPostsURL = "https://www.reddit.com/r/all/new/.json?t=all&limit=200"
 
+testNewestPostsURL :: String
+testNewestPostsURL = "https://www.reddit.com/r/testingground4bots/new/.json?t=all&limit=10"
+
 getRedditAPI :: (MonadIO m, FromJSON t) => RedditCredentials -> String -> m t
 getRedditAPI RedditCredentials {accessToken} url =
   requestAsJSON $
     getWith (defaults & header "Authorization" .~ ["Bearer " <> encodeUtf8 accessToken]) url
 
-getNewestPosts :: (MonadIO m) => m NewestPostsResponse
-getNewestPosts = do
-  newestPosts <- requestAsJSON $ getWith (defaults) newestPostsURL
-  return newestPosts
+getNewestPosts :: (MonadIO m) => Bool -> m NewestPostsResponse
+getNewestPosts debugMode = requestAsJSON $ getWith defaults $ if debugMode then testNewestPostsURL else newestPostsURL
+
+-- steps left:
+-- 1. parse through all newest posts
+-- 2. check for should of/could of/would of
+-- 3. reply to posts
+-- how do you filter and return?
+
+hasGrammarError :: [Char] -> T3Data -> Bool
+hasGrammarError text T3Data {..} = text `isInfixOf` toString selftext
+
+-- TODO: filter posts for grammar errors
+-- filterGrammarErrorPosts :: NewestPostsResponse -> [T3]
+-- filterGrammarErrorPosts NewestPostsResponse {..} =
+-- filter hasGrammarError ["should of", "would of", "could of"] (children listingData)
 
 data NewestPostsResponse = NewestPostsResponse
   {listingData :: ListingData}

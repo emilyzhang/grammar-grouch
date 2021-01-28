@@ -25,7 +25,8 @@ data RedditApp = RedditApp
     -- authorization.
     redirectURI :: Text,
     grantType :: Text,
-    deviceID :: Text
+    deviceID :: Text,
+    debugMode :: Bool
   }
   deriving (Show)
 
